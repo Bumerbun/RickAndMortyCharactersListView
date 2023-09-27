@@ -10,7 +10,7 @@ export default defineStore('character', {
     }),
     actions: {
         async getNextPage(){
-            const apiStore= useApiStore()
+            const apiStore = useApiStore()
             if (this.characters.length == 0){
                 const result = (await apiStore.get(`/character?${this._filter}`)).data
                 if ("error" in result){
@@ -19,6 +19,7 @@ export default defineStore('character', {
                 return result
             }
             if (this._nextpage){
+                console.log(this._nextpage)
                 return (await apiStore.get(this._nextpage)).data
             }
             return null
@@ -31,11 +32,21 @@ export default defineStore('character', {
             return null
         },
         async appendNextPage(){
+            const apiStore = useApiStore()
             const pageData = await this.getNextPage()
             if (!pageData){
                 return
             }
-            this.characters.push(pageData.results)
+            const nextpage = pageData.info?.next
+            this._nextpage = nextpage ? apiStore.urlToPath(nextpage) : null
+            this.characters.push(...pageData.results)
+        },
+        parseEpisodes(characterepisodes: string[]){
+
+            const apiStore = useApiStore()
+            characterepisodes.slice(0,5).map((elem) => {
+                apiStore.get(apiStore.urlToPath(elem)) 
+            })
         },
         _selectPage(pageData: any){
             if (!pageData){
@@ -62,6 +73,15 @@ export default defineStore('character', {
             this.characters = []
             this._nextpage = null
             this._previouspage = null
+        },
+        reset(){
+            this._filter = null
+            this.characters = []
+            this._nextpage = null
+            this._previouspage = null
         }
+    },
+    persist: {
+        storage: persistedState.localStorage
     }
 })
