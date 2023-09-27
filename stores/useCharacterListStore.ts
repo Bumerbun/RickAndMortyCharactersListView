@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import useApiStore from "./useApiStore";
 
-export default defineStore('character', {
+export default defineStore('characterList', {
     state: () => ({
         characters : [] as any[],
         _filter: null as string | null, 
@@ -21,7 +21,6 @@ export default defineStore('character', {
             return pageData
         },
         async _getNextPage(){
-            const apiStore = useApiStore()
             if (this.characters.length == 0){
                 try {
                     return this._getPageData(`/character?${this._filter}`)
@@ -36,7 +35,6 @@ export default defineStore('character', {
             return null
         },
         async _getPreviousPage(){
-            const apiStore= useApiStore()
             if (this._previouspage){
                 return this._getPageData(this._previouspage)
             }
