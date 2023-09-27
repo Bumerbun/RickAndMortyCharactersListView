@@ -15,7 +15,7 @@ export default defineStore("apistore", {
             return url.replace(baseURL, "")
         },
         get(test: string){
-            return api.get(test)
+            return api.get(this.urlToPath(test))
         }
     }
 })

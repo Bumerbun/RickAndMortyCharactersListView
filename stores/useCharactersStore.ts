@@ -9,65 +9,74 @@ export default defineStore('character', {
         _previouspage: null as string | null,
     }),
     actions: {
-        async getNextPage(){
+
+        async _getPageData(link: string){
+            const apiStore = useApiStore()
+            const pageData = (await apiStore.get(link)).data
+            console.log(pageData)
+            for (let i = 0; i < pageData.results.length; i++){
+                pageData.results[i].episode = ((await this._parseEpisodes(pageData.results[i].episode)).splice(0, 5))
+            }
+            console.log(pageData)
+            return pageData
+        },
+        async _getNextPage(){
             const apiStore = useApiStore()
             if (this.characters.length == 0){
                 try {
-                    return (await apiStore.get(`/character?${this._filter}`)).data   
+                    return this._getPageData(`/character?${this._filter}`)
                 } catch (error: any) {
                     console.log(error.message)
                     return null
                 }
             }
             if (this._nextpage){
-                console.log(this._nextpage)
-                return (await apiStore.get(this._nextpage)).data
+                return this._getPageData(this._nextpage)
             }
             return null
         },
-        async getPreviousPage(){
+        async _getPreviousPage(){
             const apiStore= useApiStore()
             if (this._previouspage){
-                return (await apiStore.get(this._previouspage)).data
+                return this._getPageData(this._previouspage)
             }
             return null
         },
         async appendNextPage(){
-            const apiStore = useApiStore()
-            const pageData = await this.getNextPage()
+            const pageData = await this._getNextPage()
             if (!pageData){
                 return
             }
-            const nextpage = pageData.info?.next
-            this._nextpage = nextpage ? apiStore.urlToPath(nextpage) : null
+            this._nextpage = pageData.info?.next
+            this._previouspage = pageData.info?.prev
             this.characters.push(...pageData.results)
         },
-        parseEpisodes(characterepisodes: string[]){
-
+        async _parseEpisodes(characterepisodes: string[]){
+            const episodes = []
+            for (let i = 0; i < characterepisodes.length; i ++){
+                episodes.push(await this._getEpisodeData(characterepisodes[i]))
+            }
+            return episodes
+        },
+        async _getEpisodeData(link: string){
             const apiStore = useApiStore()
-            characterepisodes.slice(0,5).map((elem) => {
-                apiStore.get(apiStore.urlToPath(elem)) 
-            })
+            const episodeData = (await apiStore.get(link)).data
+            return (({ name, episode, id }) => ({ name, episode, id }))(episodeData)
         },
         _selectPage(pageData: any){
             if (!pageData){
                 return
             }
-            const apiStore = useApiStore()
-
             this.characters = pageData.results
 
-            const nextpage = pageData.info?.next
-            this._nextpage = nextpage ? apiStore.urlToPath(nextpage) : null
-
-            const previouspage = pageData.info?.prev
-            this._previouspage = previouspage ? apiStore.urlToPath(pageData.info?.prev) : null
+            this._nextpage = pageData.info?.next
+            this._previouspage = pageData.info?.prev
         },
         async selectNextPage(){
-            this._selectPage(await this.getNextPage())
+            this._selectPage(await this._getNextPage())
         },
         async selectPreviousPage(){
-            this._selectPage(await this.getPreviousPage())
+            this._selectPage(await this._getPreviousPage())
         },
         setFilter(filter: string){
             this._filter = filter

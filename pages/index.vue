@@ -16,12 +16,16 @@
         </div>
         <div class="character_cards_list">
             <div class="character_card" v-for="cardData in characters">
-                <p> {{ cardData.name }}</p>
-                <p>Разновидность: {{ cardData.species }}</p>
-                <img :src="cardData.image">
-                <div class="episodes_list">
-                    <div class="episode" v-for="episode in cardData.episode">
-                        <p>{{ episode }}</p>
+                <NuxtLink :to="`/character?${cardData.id}`">
+                    <h2> {{ cardData.name }}</h2>
+                    <p>Разновидность: {{ cardData.species }}</p>
+                    <img class="card_image" :src="cardData.image">
+                </NuxtLink>
+                <div>
+                    <div class="episode_row" v-for="episode in cardData.episode">
+                        <NuxtLink class="link_fill" :to="`/episode?id=${episode.id}`"/>
+                        <div class="episode_name">{{ episode.name }}</div>
+                        <div class="episode">{{ episode.episode }}</div>
                     </div>
                 </div>
             </div>
@@ -30,8 +34,8 @@
 </template>
   
 <script lang="ts">
-  import useApiStore from "../stores/useApiStore";
-  import useCharactersStore from "../stores/useCharactersStore"
+import useApiStore from "../stores/useApiStore";
+import useCharactersStore from "../stores/useCharactersStore"
 import useFiltrationOptionsStore from "../stores/useFiltrationOptionsStore";
   
   export default {
@@ -79,15 +83,45 @@ import useFiltrationOptionsStore from "../stores/useFiltrationOptionsStore";
 .character_cards_list{
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .character_card{
   width: 21%;
+  position: relative;
   box-sizing: border-box;
   margin: 2%;
   border-radius: 1%;
   border: solid;
-  border-color: aqua;
+  border-color: rgba(136, 136, 136, 0.738);
   text-align: center;
+}
+.card_image{
+    max-width: 100%;
+}
+
+.overlay_link{
+    width: 100%;
+    height: 100%;
+}
+
+.episodes_list{
+    width: 100%;
+    
+}.episode_row .link_fill {
+  position:absolute;
+  left:0; top:0; bottom:0; right:0;
+}
+.episode_row{
+    position:relative;
+    display: grid;
+    grid-template-columns: auto max-content;
+    column-gap: 5px;
+    padding: 5%;
+}
+.episode_name{
+    text-align: left;
+}.episode{
+    text-align: right;
 }
 </style>
