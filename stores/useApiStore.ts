@@ -8,7 +8,6 @@ const api = axios.create({
       common: {},
     },
   })
-console.log(await api.get("https://rickandmortyapi.com/api"))
 
 export default defineStore("apistore", {
     actions: {

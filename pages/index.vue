@@ -4,20 +4,14 @@
         <input type="button" v-on:click="appendCharacters">
         <div class="filtration_options">
             <div class="filtration_option">
-                <label for="species_select" class="filtration_label">Выбор разновидности</label>
-                <select ref="species_select" class="selection_menu">
-                    <option v-for="species in speciesOptions" :value="species" class="selection_option">{{ species }}</option>
-                </select>
-            </div>
-            <div class="filtration_option">
-                <label for="species_select" class="filtration_label">Статус</label>
-                <select ref="species_select" class="selection_menu">
-                    <option v-for="status in statusOptions" :value="status" class="selection_option">{{ status }}</option>
+                <label for="status_select" class="filtration_label">Статус</label>
+                <select ref="status_select" class="selection_menu" v-model="selectedFiltration.status" v-on:change="updateFiltration">
+                    <option v-for="status in statusOptions" :value="status" class="selection_option" :selected="status == selectedFiltration.status">{{ status }}</option>
                 </select>
             </div>
             <div class="filtration_option">
                 <label for="name_input">Поиск по имени</label>
-                <input type="search" ref="name_input"/>
+                <input type="search" ref="name_input" v-model="selectedFiltration.name" v-on:input="updateFiltration"/>
             </div>
         </div>
         <div class="character_cards_list">
@@ -38,6 +32,7 @@
 <script lang="ts">
   import useApiStore from "../stores/useApiStore";
   import useCharactersStore from "../stores/useCharactersStore"
+import useFiltrationOptionsStore from "../stores/useFiltrationOptionsStore";
   
   export default {
     mounted(){
@@ -50,8 +45,8 @@
       return {
         apiStore: useApiStore(),
         charactersStore: useCharactersStore(),
-        speciesOptions: ["Все значения", "Human", "Alien", "Другое"],
-        statusOptions: ["Любой", "alive", "dead", "unknown"],
+        selectedFiltration: useFiltrationOptionsStore(),
+        statusOptions: ["", "alive", "dead", "unknown"]
       }
     },
     computed: {
@@ -60,13 +55,14 @@
         }
     },
     methods: {
-        updateFiltration(){
+        async updateFiltration(){
+            this.charactersStore.setFilter(`name=${this.selectedFiltration.name}&status=${this.selectedFiltration.status}`)
+            await this.charactersStore.appendNextPage()
         },
         resetCharacters(){
             this.charactersStore.reset()
         },
         async appendCharacters(){
-            console.log(this.charactersStore._nextpage)
             await this.charactersStore.appendNextPage()
         },
         onScroll(){
@@ -86,7 +82,7 @@
 }
 
 .character_card{
-  width: 28.33%;
+  width: 21%;
   box-sizing: border-box;
   margin: 2%;
   border-radius: 1%;

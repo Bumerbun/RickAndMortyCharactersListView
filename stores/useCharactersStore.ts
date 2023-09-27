@@ -12,11 +12,12 @@ export default defineStore('character', {
         async getNextPage(){
             const apiStore = useApiStore()
             if (this.characters.length == 0){
-                const result = (await apiStore.get(`/character?${this._filter}`)).data
-                if ("error" in result){
+                try {
+                    return (await apiStore.get(`/character?${this._filter}`)).data   
+                } catch (error: any) {
+                    console.log(error.message)
                     return null
                 }
-                return result
             }
             if (this._nextpage){
                 console.log(this._nextpage)
