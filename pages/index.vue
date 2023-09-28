@@ -35,9 +35,12 @@
 import useApiStore from "../stores/useApiStore";
 import useCharacterListStore from "../stores/useCharacterListStore"
 import useFiltrationOptionsStore from "../stores/useFiltrationOptionsStore";
-  
-  export default {
+
+// filtrations + character data preview
+// switch for infinite-scrolling / pagination mode can be implemented, but not needed
+export default {
     mounted(){
+        // setup for infinite-scroll
         window.onscroll = () => this.onScroll()
         if (this.characters.length == 0){
             this.appendCharacters()
@@ -48,7 +51,7 @@ import useFiltrationOptionsStore from "../stores/useFiltrationOptionsStore";
         apiStore: useApiStore(),
         charactersStore: useCharacterListStore(),
         selectedFiltration: useFiltrationOptionsStore(),
-        statusOptions: ["", "alive", "dead", "unknown"]
+        statusOptions: ["", "alive", "dead", "unknown"]  // in future change to enum
       }
     },
     computed: {
@@ -57,16 +60,21 @@ import useFiltrationOptionsStore from "../stores/useFiltrationOptionsStore";
         }
     },
     methods: {
+
+        // updates filtration options and reloads found characters
         async updateFiltration(){
             this.charactersStore.setFilter(`name=${this.selectedFiltration.name}&status=${this.selectedFiltration.status}`)
             await this.charactersStore.appendNextPage()
         },
+        // hard reset of character list
         resetCharacters(){
             this.charactersStore.reset()
         },
+        // hard append next characters
         async appendCharacters(){
             await this.charactersStore.appendNextPage()
         },
+        // infinite-scroll append
         onScroll(){
             let bottomOfWindow = Math.max(window.scrollY, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
 

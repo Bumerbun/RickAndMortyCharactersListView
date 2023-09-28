@@ -7,6 +7,7 @@ export default defineStore("episode", {
         episodeData: null as any,
     }),
     actions: {
+        // sets Id and fills data
         async setId(id : number){
             if (this._id == id){
                 return

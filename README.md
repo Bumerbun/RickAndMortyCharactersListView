@@ -1,75 +1,24 @@
-# Nuxt 3 Minimal Starter
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
-
+## Установка
 ```bash
-# npm
+# Скопировать действующий репозиторий
+git clone https://github.com/Bumerbun/TestTaskDom
+
+# Установка зависимостей
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+## Запуск сервера
 
-Start the development server on `http://localhost:3000`:
+Сервер запускается на `http://localhost:3000`:
 
 ```bash
-# npm
+# Запуск сервера в режиме разработки
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
-
-## Production
-
-Build the application for production:
-
 ```bash
-# npm
+# Сборка приложения и запуск сервера
 npm run build
 
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

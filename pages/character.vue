@@ -13,6 +13,8 @@
 import useCharacterStore from '~/stores/useCharacterStore';
 
 
+// gets data from query to fill form
+// better to refactor to use nuxt parameters
 export default {
     beforeMount(){
         this.characterStore.setId(Number(this.$route.query.id))

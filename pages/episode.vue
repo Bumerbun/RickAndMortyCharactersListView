@@ -18,11 +18,10 @@
 <script lang="ts">
 import useEpisodeStore from '~/stores/useEpisodeStore'
 
+// 
 export default {
     beforeMount(){
         this.episodeStore.setId(Number(this.$route.query.id))
-        console.log(this.episodeStore.episodeData)
-
     },
     mounted(){
     },
