@@ -18,7 +18,8 @@
 <script lang="ts">
 import useEpisodeStore from '~/stores/useEpisodeStore'
 
-// 
+// gets data from query to fill form
+// better to refactor to use nuxt parameters
 export default {
     beforeMount(){
         this.episodeStore.setId(Number(this.$route.query.id))

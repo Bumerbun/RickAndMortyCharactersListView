@@ -4,7 +4,7 @@ import useApiStore from "./useApiStore";
 export default defineStore("episode", {
     state: () => ({
         _id: null as number | null,
-        episodeData: null as any,
+        episodeData: null as any,  // should be class for storing episode data
     }),
     actions: {
         // sets Id and fills data

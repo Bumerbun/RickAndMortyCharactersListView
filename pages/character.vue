@@ -12,7 +12,6 @@
 <script lang="ts">
 import useCharacterStore from '~/stores/useCharacterStore';
 
-
 // gets data from query to fill form
 // better to refactor to use nuxt parameters
 export default {
